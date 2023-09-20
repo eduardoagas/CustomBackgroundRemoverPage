@@ -1,8 +1,6 @@
 FROM python:3.10
 
 ## App engine stuff
-# Expose port you want your app on
-EXPOSE 3000
 
 # Upgrade pip 
 RUN pip install -U pip
@@ -18,5 +16,8 @@ COPY websocket.py /usr/local/lib/python3.10/site-packages/tornado
 COPY . /app
 WORKDIR /app
 
-# Run
-CMD [ "streamlit", "run", "app.py" ]
+EXPOSE 8501
+
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
