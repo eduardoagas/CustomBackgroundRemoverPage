@@ -6,10 +6,14 @@ import json
 import requests
 import SessionState
 import gettext
+import streamlit.components.v1 as components
 import streamlit as st
 import tensorflow as tf
 from utils import load_result, load_and_prep_image, classes_and_models, update_logger, predict_json
 from inter import inter
+
+HtmlFile = open("test.html", 'r', encoding='utf-8')
+source_code = HtmlFile.read()
 
 _ = inter("pt-br") #internationalization
 
@@ -59,14 +63,20 @@ uploaded_file = st.file_uploader(label=_("Upload an image to be processed:"),
 # See: https://discuss.streamlit.io/t/the-button-inside-a-button-seems-to-reset-the-whole-app-why/1051/11 
 session_state = SessionState.get(pred_button=False)
 
+#ad?
+
+
+
 # Create logic for app flow
 if not uploaded_file:
     st.warning("Please upload an image.")
+    components.html(source_code, height=600)
     st.stop()
 else:
     #session_state.uploaded_image = uploaded_file.read()
     #st.image(session_state.uploaded_image, use_column_width=True)
     pred_button = st.button("Send")
+
 
 # Did the user press the predict button?
 if pred_button:
@@ -104,6 +114,9 @@ if session_state.pred_button:
                                 correct=False,
                                 user_label=session_state.correct_class))
 
+
+
 # TODO: code could be cleaned up to work with a main() function...
 # if __name__ == "__main__":
 #     main()
+
