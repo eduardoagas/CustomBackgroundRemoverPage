@@ -23,3 +23,7 @@ CHANGE THIS LINE TO
 
 ####
 streamlit run app.py
+
+docker cp C:/Users/Du/Documents/Python/CustomBackgroundRemoverPage/food-vision/streamlitenv/Lib/site-packages/tornado/websocket.py <container>:/usr/local/lib/python3.10/site-packages/tornado
+
+docker cp C:/Users/Du/Documents/Python/CustomBackgroundRemoverPage/food-vision/streamlitenv/Lib/site-packages/tornado/websocket.py 73d323cbbb2e1f700515c2db525e658b5035f038b4d358607480930af7f14032:/usr/local/lib/python3.10/site-packages/tornado

@@ -4,6 +4,7 @@
 *.git
 *.key
 env
+streamlitenv
 images
 keynote-images
 
