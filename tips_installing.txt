@@ -1,0 +1,25 @@
+pip install virtualenv
+virtualenv <ENV-NAME>
+
+
+make a new requirements file downloading all the most recent 
+versions of each requirement; then, run the old requirement 
+file downgrading everything.
+
+
+env must be activated then
+
+
+cd <ENV-NAME>/Scripts/
+./activate
+
+pip freeze > requirements.txt     actually...
+
+
+CHANGE THIS LINE TO
+  File "virtualenv\lib\site-packages\tornado\websocket.py", line 797
+    data + b"\x00\x00\xff\xff", int(self._max_message_size)
+
+
+####
+streamlit run app.py
