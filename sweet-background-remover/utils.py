@@ -97,16 +97,28 @@ def load_and_prep_image(filename):
     x = np.expand_dims(x, axis=0)
     return x
 
+
 def load_result(pred, filename):
     file_bytes = np.asarray(bytearray(filename), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     image_h, image_w,_ = image.shape
-    y0 = pred[0][0]
+    y0 = pred[0][0]* 255
     y0 = cv2.resize(y0, (image_w, image_h))
     y0 = np.expand_dims(y0, axis=-1)
-    result = image*y0
-    is_sucess, result = cv2.imencode(".jpg", result)
-    print(is_sucess)
+    #result = image*y0
+
+    #todo esse rolê pra transformar em grayscale img
+    #_,mask = cv2.imencode(".png", y0)
+    #file_bytes = np.asarray(bytearray(mask.tobytes()), dtype=np.uint8)
+    #mask = cv2.imdecode(file_bytes, cv2.IMREAD_GRAYSCALE)
+
+    #cv2.imwrite("img.png", image)
+    #cv2.imwrite("mask.png", mask)
+    result = np.dstack((image, y0))
+    #cv2.imwrite("result.png", result)
+    is_sucess, result = cv2.imencode(".png", result)
+    #result = remove_black_background(result.tobytes())
+    #print(is_sucess)
     return result.tobytes()
 
 def update_logger(image, model_used, pred_class, pred_conf, correct=False, user_label=None):
@@ -123,3 +135,19 @@ def update_logger(image, model_used, pred_class, pred_conf, correct=False, user_
         "user_label": user_label
     }   
     return logger
+
+
+"""""
+def remove_black_background(src):
+    file_bytes = np.asarray(bytearray(src), dtype=np.uint8)
+    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    tmp = cv2.imdecode(file_bytes, cv2.IMREAD_GRAYSCALE)
+    _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
+    b, g, r = cv2.split(image)
+    rgba = [b, g, r, alpha]
+    dst = cv2.merge(rgba, 4)
+    cv2.imwrite("test.png", dst)
+    _,result = cv2.imencode(".png", dst)
+    return result
+
+"""""
