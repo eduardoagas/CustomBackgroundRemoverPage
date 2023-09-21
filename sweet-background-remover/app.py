@@ -9,8 +9,10 @@ import gettext
 import streamlit.components.v1 as components
 import streamlit as st
 import tensorflow as tf
-from utils import load_result, load_and_prep_image, classes_and_models, update_logger, predict_json
+from utils import predict_off, load_result, load_and_prep_image, classes_and_models, update_logger, predict_json
 from inter import inter
+
+online = False
 
 HtmlFile = open("test.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read()
@@ -41,12 +43,15 @@ def make_prediction(image, model, class_names):
      pred_conf (model confidence)
     """
 
-    pimage, ishape = load_and_prep_image(image)
-    preds = predict_json(project=PROJECT,
-                         region=REGION,
-                         model=model,
-                         instances=pimage)
-    image = load_result(preds, ishape)
+    pimage = load_and_prep_image(image)
+    if(online):
+        preds = predict_json(project=PROJECT,
+                            region=REGION,
+                            model=model,
+                            instances=pimage)
+    else:
+        preds = predict_off(pimage)
+    image = load_result(preds, image)
     return image
 
 choose_model = "Model 1 (10 food classes)"
@@ -73,21 +78,19 @@ if not uploaded_file:
     components.html(source_code, height=600)
     st.stop()
 else:
-    #session_state.uploaded_image = uploaded_file.read()
+    session_state.uploaded_image = uploaded_file.read()
     #st.image(session_state.uploaded_image, use_column_width=True)
-    pred_button = st.button("Send")
+    pred_button = st.button(_("Send"))
 
 
-# Did the user press the predict button?
+# Did the user press the Send button?
 if pred_button:
     session_state.pred_button = True 
 
 # And if they did...
 if session_state.pred_button:
-    session_state.image, session_state.pred_class, session_state.pred_conf = make_prediction(session_state.uploaded_image, model=MODEL, class_names=CLASSES)
-    st.write(f"Prediction: {session_state.pred_class}, \
-               Confidence: {session_state.pred_conf:.3f}")
-
+    session_state.image = make_prediction(session_state.uploaded_image, model=MODEL, class_names=CLASSES)
+    st.image(session_state.image, use_column_width=True)
     # Create feedback mechanism (building a data flywheel)
     session_state.feedback = st.selectbox(
         "Is this correct?",

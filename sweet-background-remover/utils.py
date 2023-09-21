@@ -1,4 +1,5 @@
 # Utils for preprocessing data etc 
+import os
 import tensorflow as tf
 import googleapiclient.discovery
 from google.api_core.client_options import ClientOptions
@@ -35,6 +36,11 @@ classes_and_models = {
     }
 }
 
+def predict_off(image):
+    model_path = os.path.join("files", "modelrefpmaredone3.h5")
+    model = tf.keras.models.load_model(model_path)
+    return model.predict(image, verbose=0)
+
 def predict_json(project, region, model, instances, version=None):
     """Send json data to a deployed model for prediction.
 
@@ -56,6 +62,7 @@ def predict_json(project, region, model, instances, version=None):
     client_options = ClientOptions(api_endpoint=api_endpoint)
 
     # Setup model path
+    model_path = os.path.join("files", "modelrefpmaredone3.h5")
     model_path = "projects/{}/models/{}".format(project, model)
     if version is not None:
         model_path += "/versions/{}".format(version)
@@ -82,19 +89,25 @@ def predict_json(project, region, model, instances, version=None):
     return response["predictions"]
 
 # Create a function to import an image and resize it to be able to be used with our model
-def load_and_prep_image(filename):
-  
-  image = cv2.imread(filename, cv2.IMREAD_COLOR)
-  x = cv2.resize(image, (W, H))
-  x = x/255.0
-  x = np.expand_dims(x, axis=0)
-  return x, image.shape
+def load_and_prep_image(filename): 
+    file_bytes = np.asarray(bytearray(filename), dtype=np.uint8)
+    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    x = cv2.resize(image, (W, H))
+    x = x/255.0
+    x = np.expand_dims(x, axis=0)
+    return x
 
-def load_result(pred, shape):
-    image_h, image_w, _ = shape
+def load_result(pred, filename):
+    file_bytes = np.asarray(bytearray(filename), dtype=np.uint8)
+    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    image_h, image_w,_ = image.shape
     y0 = pred[0][0]
     y0 = cv2.resize(y0, (image_w, image_h))
     y0 = np.expand_dims(y0, axis=-1)
+    result = image*y0
+    is_sucess, result = cv2.imencode(".jpg", result)
+    print(is_sucess)
+    return result.tobytes()
 
 def update_logger(image, model_used, pred_class, pred_conf, correct=False, user_label=None):
     """

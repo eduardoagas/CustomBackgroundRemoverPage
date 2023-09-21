@@ -13,6 +13,9 @@ env must be activated then
 cd <ENV-NAME>/Scripts/
 ./activate
 
+quick recap
+./sweet-background-remover/streamlitenv/Scripts/activate
+
 pip freeze > requirements.txt     actually...
 
 
@@ -32,4 +35,5 @@ docker build -t sympathetic .
 
 docker run -p 8501:8501 sympathetic
 
+access via
 localhost:8501
