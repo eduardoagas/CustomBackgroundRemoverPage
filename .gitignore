@@ -147,6 +147,6 @@ dmypy.json
 .DS_Store
 *.key
 keynote-images
-sweet-background-remover\files
+sweet-background-remover/files/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python
