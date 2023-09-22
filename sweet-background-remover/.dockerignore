@@ -7,7 +7,7 @@ env
 streamlitenv
 images
 keynote-images
-files
+files/custom-background-remover-a499821ff491.json
 
 # Python stuff
 *.pyc
