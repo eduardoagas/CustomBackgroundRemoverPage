@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 05:25-0300\n"
+"POT-Creation-Date: 2023-09-22 07:58-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:23
-msgid "Welcome to Sweet Background Remover!"
-msgstr "Bem-vindo ao Sweet Background Remover!"
+#: app.py:29
+#, fuzzy
+msgid "Welcome to AI Sweet Background Remover!"
+msgstr "Bem-vindo ao AI Sweet Background Remover!"
 
-#: app.py:24
+#: app.py:30
 msgid "Remove background from your photos"
 msgstr "Vem retirar o fundo da sua foto!"
 
-#: app.py:55
+#: app.py:64
 msgid "Upload an image to be processed:"
-msgstr "Carregue uma foto aqui para começarmos:"
+msgstr "Carregue uma foto para começarmos:"
+
+#: app.py:77
+msgid "Please upload an image."
+msgstr "Envie um arquivo."
+
+#: app.py:83
+msgid "Send"
+msgstr "Enviar"

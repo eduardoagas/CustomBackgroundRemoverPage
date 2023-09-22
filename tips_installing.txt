@@ -36,6 +36,6 @@ docker build -t sympathetic .
 docker run -p 8501:8501 sympathetic
 
 access via
-localhost:8501
+localhost:port
 
 config.toml in users/{user}/.streamlit/config.toml

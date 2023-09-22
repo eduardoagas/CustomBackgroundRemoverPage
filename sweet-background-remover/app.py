@@ -12,6 +12,7 @@ import tensorflow as tf
 from utils import predict_off, load_result, load_and_prep_image, classes_and_models, update_logger, predict_json
 from inter import inter
 
+#online = True
 online = False
 
 HtmlFile = open("test.html", 'r', encoding='utf-8')
@@ -20,19 +21,19 @@ source_code = HtmlFile.read()
 _ = inter("pt-br") #internationalization
 
 # Setup environment credentials (you'll need to change these)
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "daniels-dl-playground-4edbcb2e6e37.json" # change for your GCP key
-PROJECT = "daniels-dl-playground" # change for your GCP project
-REGION = "us-central1" # change for your GCP region (where your model is hosted)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join("files", "custom-background-remover-a499821ff491.json") # change for your GCP key
+PROJECT = "custom-background-remover" # change for your GCP project
+REGION = "us-east1" # change for your GCP region (where your model is hosted)
 
 ### Streamlit code (works as a straigtht-forward script) ###
 emojis = " 🙌😍📸" # win+"."" shortcut icon
-st.title(_("Welcome to Sweet Background Remover!"))
+st.title(_("Welcome to AI Sweet Background Remover!"))
 message = _("Remove background from your photos")
 st.header(message + emojis) 
 
 
 @st.cache # cache the function so predictions aren't always redone (Streamlit refreshes every click)
-def make_prediction(image, model, class_names):
+def remove_background(image, model, class_names):
     """
     Takes an image and uses model (a trained TensorFlow model) to make a
     prediction.
@@ -45,16 +46,16 @@ def make_prediction(image, model, class_names):
 
     pimage = load_and_prep_image(image)
     if(online):
+        #pimage = tf.cast(tf.expand_dims(pimage, axis=0), tf.int16) #it expects a map
         preds = predict_json(project=PROJECT,
                             region=REGION,
                             model=model,
-                            instances=pimage)
+                            instance=pimage)
     else:
         preds = predict_off(pimage)
     image = load_result(preds, image)
     return image
 
-choose_model = "Model 1 (10 food classes)"
 
 CLASSES = classes_and_models["model_1"]["classes"]
 MODEL = classes_and_models["model_1"]["model_name"]
@@ -74,7 +75,7 @@ session_state = SessionState.get(pred_button=False)
 
 # Create logic for app flow
 if not uploaded_file:
-    st.warning("Please upload an image.")
+    st.warning(_("Please upload an image."))
     components.html(source_code, height=600)
     st.stop()
 else:
@@ -89,33 +90,9 @@ if pred_button:
 
 # And if they did...
 if session_state.pred_button:
-    session_state.image = make_prediction(session_state.uploaded_image, model=MODEL, class_names=CLASSES)
+    session_state.image = remove_background(session_state.uploaded_image, model=MODEL, class_names=CLASSES)
     st.image(session_state.image, use_column_width=True)
-    # Create feedback mechanism (building a data flywheel)
-    session_state.feedback = st.selectbox(
-        "Is this correct?",
-        ("Select an option", "Yes", "No"))
-    if session_state.feedback == "Select an option":
-        pass
-    elif session_state.feedback == "Yes":
-        st.write("Thank you for your feedback!")
-        # Log prediction information to terminal (this could be stored in Big Query or something...)
-        print(update_logger(image=session_state.image,
-                            model_used=MODEL,
-                            pred_class=session_state.pred_class,
-                            pred_conf=session_state.pred_conf,
-                            correct=True))
-    elif session_state.feedback == "No":
-        session_state.correct_class = st.text_input("What should the correct label be?")
-        if session_state.correct_class:
-            st.write("Thank you for that, we'll use your help to make our model better!")
-            # Log prediction information to terminal (this could be stored in Big Query or something...)
-            print(update_logger(image=session_state.image,
-                                model_used=MODEL,
-                                pred_class=session_state.pred_class,
-                                pred_conf=session_state.pred_conf,
-                                correct=False,
-                                user_label=session_state.correct_class))
+  
 
 
 

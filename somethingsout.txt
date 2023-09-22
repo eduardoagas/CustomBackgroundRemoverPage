@@ -1,0 +1,25 @@
+  # Create feedback mechanism (building a data flywheel)
+    session_state.feedback = st.selectbox(
+        "Is this satisfying?",
+        ("Select an option", "Yes", "No"))
+    if session_state.feedback == "Select an option":
+        pass
+    elif session_state.feedback == "Yes":
+        st.write("Thank you for your feedback!")
+        # Log prediction information to terminal (this could be stored in Big Query or something...)
+        print(update_logger(image=session_state.image,
+                            model_used=MODEL,
+                            pred_class=session_state.pred_class,
+                            pred_conf=session_state.pred_conf,
+                            correct=True))
+    elif session_state.feedback == "No":
+        session_state.correct_class = st.text_input("What should the correct label be?")
+        if session_state.correct_class:
+            st.write("Thank you for that, we'll use your help to make our model better!")
+            # Log prediction information to terminal (this could be stored in Big Query or something...)
+            print(update_logger(image=session_state.image,
+                                model_used=MODEL,
+                                pred_class=session_state.pred_class,
+                                pred_conf=session_state.pred_conf,
+                                correct=False,
+                                user_label=session_state.correct_class))
