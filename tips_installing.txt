@@ -37,3 +37,5 @@ docker run -p 8501:8501 sympathetic
 
 access via
 localhost:8501
+
+config.toml in users/{user}/.streamlit/config.toml

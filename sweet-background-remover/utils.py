@@ -36,10 +36,10 @@ classes_and_models = {
     }
 }
 
-def predict_off(image):
+def predict_off(pimage):
     model_path = os.path.join("files", "modelrefpmaredone3.h5")
     model = tf.keras.models.load_model(model_path)
-    return model.predict(image, verbose=0)
+    return model.predict(pimage, verbose=0)
 
 def predict_json(project, region, model, instances, version=None):
     """Send json data to a deployed model for prediction.
