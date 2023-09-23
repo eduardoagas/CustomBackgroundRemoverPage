@@ -11,4 +11,3 @@ docker push gcr.io/your-project-id/your-app-name
 
 gcloud app deploy --image-url=southamerica-east1-docker.pkg.dev/custom-background-remover/sweetbgremover
 
-https://custom-background-remover.rj.r.appspot.com
