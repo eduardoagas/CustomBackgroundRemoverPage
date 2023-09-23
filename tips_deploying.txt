@@ -1,0 +1,14 @@
+gcr.io/custom-background-remover/sweetbgremover
+
+
+gcloud auth configure-docker
+
+docker tag your-image-name gcr.io/your-project-id/your-app-name
+
+
+docker push gcr.io/your-project-id/your-app-name
+
+
+gcloud app deploy --image-url=southamerica-east1-docker.pkg.dev/custom-background-remover/sweetbgremover
+
+https://custom-background-remover.rj.r.appspot.com

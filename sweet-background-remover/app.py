@@ -15,8 +15,8 @@ from inter import inter
 #online = True
 online = False
 
-HtmlFile = open("test.html", 'r', encoding='utf-8')
-source_code = HtmlFile.read()
+#HtmlFile = open("test.html", 'r', encoding='utf-8')
+#source_code = HtmlFile.read()
 
 _ = inter("pt-br") #internationalization
 
@@ -76,7 +76,7 @@ session_state = SessionState.get(pred_button=False)
 # Create logic for app flow
 if not uploaded_file:
     st.warning(_("Please upload an image."))
-    components.html(source_code, height=600)
+    #components.html(source_code, height=600)
     st.stop()
 else:
     session_state.uploaded_image = uploaded_file.read()
