@@ -3,6 +3,9 @@ gcr.io/custom-background-remover/sweetbgremover
 
 gcloud auth configure-docker
 
+# Build the Docker image
+docker build -t gcr.io/your-project-id/your-image-name:tag .
+
 docker tag your-image-name gcr.io/your-project-id/your-app-name
 
 
